@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:html';
+import 'package:video_player_web/shaka/src/player.dart';
+
 import 'src/shims/dart_ui.dart' as ui;
 
 import 'package:flutter/material.dart';
@@ -54,6 +56,12 @@ class VideoPlayerPlugin extends VideoPlayerPlatform {
     _videoPlayers.remove(textureId);
     return null;
   }
+  @override
+  Future<void> setMixWithOthers(bool mixWithOthers) async
+  {
+
+  }
+
 
   void _disposeAllPlayers() {
     _videoPlayers.values
@@ -159,13 +167,15 @@ class _VideoPlayer {
 
   void initialize() {
     videoElement = VideoElement()
-      ..src = uri
+      //..src = uri
       ..autoplay = false
       ..controls = false
       ..style.border = 'none';
 
     // Allows Safari iOS to play the video inline
     videoElement.setAttribute('playsinline', 'true');
+    final  localPlayer =  Player(videoElement);
+    localPlayer.load(uri);
 
     // TODO(hterkelsen): Use initialization parameters once they are available
     ui.platformViewRegistry.registerViewFactory(
@@ -280,4 +290,5 @@ class _VideoPlayer {
     }
     return durationRange;
   }
+
 }
